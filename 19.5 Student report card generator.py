@@ -100,11 +100,6 @@ class Classroom:
             print(f"Name: {student.name}, Roll No: {roll_no}")
 
 
-
-
-
-
-
 #Step5. Creating the Menu-Driven-Interface(Interactive command line interface(CLI) based system for user input)
 
 def main():
