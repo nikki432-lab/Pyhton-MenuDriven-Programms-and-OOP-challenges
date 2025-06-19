@@ -63,52 +63,90 @@ class Finalreportcard(Reportcard):
         report += f"\nOverall Grade: {grade}\nOverall Result: {overall_status}\n"
         return report
 
+#Step.4 Defining the classroom class(Managing multiple students)
 
-#Step4. Creating the Menu-Driven-Interface(Interactive command line interface(CLI) based system for user input)
+class Classroom:
+    def __init__(self):
+        self.students = {}
+
+    def add_student(self, name, roll_no):
+        if roll_no in self.students:
+            print("Student with this roll number already exists.")
+            return
+        self.students[roll_no] = Student(name, roll_no)
+        print(f"student{name} added successfully.")
+
+    def add_marks(self, roll_no, subject, score):
+        if roll_no in self.students:
+            self.students[roll_no].add_marks(subject, score)
+            print(f"Marks added for {subject}.")
+        else:
+            print("Student not found.")
+        
+
+    def generate_report_card(self, roll_no):
+        if roll_no in self.students:
+            report_card = Finalreportcard(self.students[roll_no])
+            print(report_card.generate_report())
+        else:
+            print("Student not found.")
+    
+    def list_students(self):
+        if not self.students:
+            print("No students enrolled.")
+        else:
+            print("\n List of students.")
+        for roll_no, student in self.students.items():
+            print(f"Name: {student.name}, Roll No: {roll_no}")
+
+
+
+
+
+
+
+#Step5. Creating the Menu-Driven-Interface(Interactive command line interface(CLI) based system for user input)
 
 def main():
-    students = {}
+    classroom = Classroom()  # Correctly initialize Classroom
 
     while True:
         print("\nStudent Report Card System.")
-        print("1. Add student and marks.")
-        print("2. Generate Report Card.\n3. Exit")
+        print("1. Add student")
+        print("2. Add marks")
+        print("3. Generate Report Card")
+        print("4. List All Students")
+        print("5. Exit")
 
         choice = input("Enter your choice: ")
 
         if choice == '1':
             name = input("Enter student name: ")
             roll_no = input("Enter roll number: ")
-            student = Student(name, roll_no)
+            classroom.add_student(name, roll_no)  # Properly add student
 
-            # Fix inside option '1' (Adding Student & Marks)
-            while True:
-                subject = input("Enter subject name (or type 'done' to finish): ")
-                if subject.lower() == 'done':
-                    break
-                score = float(input(f"Enter marks for {subject}: "))
-                student.add_marks(subject, score)  # Correctly add marks to the student
-                students[roll_no] = student  # Store the student instance in dictionary
-
-        
         elif choice == '2':
             roll_no = input("Enter roll number: ")
-            if roll_no in students:
-                report_card = Finalreportcard(students[roll_no])
-                print(report_card.generate_report())
+            if roll_no in classroom.students:  # Check if student exists in Classroom
+                subject = input("Enter subject name: ")
+                score = float(input(f"Enter marks for {subject}: "))
+                classroom.add_marks(roll_no, subject, score)  # Add marks using Classroom method
             else:
                 print("Student not found.")
-        
-        elif  choice == '3':
+
+        elif choice == '3':
+            roll_no = input("Enter roll number: ")
+            classroom.generate_report_card(roll_no)  # Generate report card
+
+        elif choice == '4':
+            classroom.list_students()  # List all students
+
+        elif choice == '5':
             print("Exiting....")
             break
+
         else:
-            ("Invalid choice. please try again.")
+            print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":
     main()
-
-        
-
-
-            
